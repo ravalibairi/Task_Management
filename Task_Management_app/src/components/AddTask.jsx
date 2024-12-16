@@ -1,14 +1,13 @@
-import {useState} from "react";
+import { useState } from "react";
 
-function AddTask({onAddTask}){
+function AddTask({ onAddTask, onClose }) {
     const [data, setData] = useState({
-        userId:"",
-        title:"",
-        completed:false,
-
+        userId: "",
+        title: "",
+        completed: false,
     });
 
-    const handleOnSubmit=(event)=>{
+    const handleOnSubmit = (event) => {
         event.preventDefault();
 
         if (!data.userId) {
@@ -24,25 +23,24 @@ function AddTask({onAddTask}){
             return;
         }
 
-
-        // Display form data in an alert
         alert(
             `Task Added:\nUserID: ${data.userId}\nTitle: ${data.title}\nCompleted: ${data.completed}`
         );
 
-        console.log("Form Submitted:", data);
-        const newTask={...data,id:Date.now};
+        const newTask = { ...data, id: Date.now() };  // Fix here
         onAddTask(newTask);
-    }
+        onClose();
+    };
 
-    const handleOnChange=(event)=>{
-       const  {name,value}=event.target;
-       setData((values)=>({...values,[name]:
-           name==="completed"?value==="True":value}));
+    const handleOnChange = (event) => {
+        const { name, value } = event.target;
+        setData((values) => ({
+            ...values,
+            [name]: name === "completed" ? value === "true" : value,
+        }));
+    };
 
-    }
-
-    return(
+    return (
         <div>
             <form onSubmit={handleOnSubmit}>
                 <label>
@@ -55,7 +53,7 @@ function AddTask({onAddTask}){
                         onChange={handleOnChange}
                     />
                 </label>
-                <br/>
+                <br />
                 <label>
                     Title
                     <input
@@ -66,7 +64,7 @@ function AddTask({onAddTask}){
                         onChange={handleOnChange}
                     />
                 </label>
-                <br/>
+                <br />
                 <label>
                     Completed
                     <select
@@ -75,12 +73,13 @@ function AddTask({onAddTask}){
                         value={data.completed}
                         onChange={handleOnChange}
                     >
-                        <option value="False">False</option>
-                        <option value="True">True</option>
+                        <option value="false">False</option>
+                        <option value="true">True</option>
                     </select>
                 </label>
-                <br/>
-                <input type="submit" value="Submit"/>
+                <br />
+                <input type="submit" value="Submit" />
+                <button type="button" onClick={onClose}>Cancel</button>
             </form>
         </div>
     );
